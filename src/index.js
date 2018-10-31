@@ -1,8 +1,8 @@
 class PromiseLock {
     constructor() {
-        this._lockId = 0
-        this._lockCache = {}
-        this._lockIdArray = []
+        this._lockId = 1
+        this._currentLockId = null
+        this._queueResolve = {} // 当前排队任务
     }
 
     /**
@@ -13,7 +13,17 @@ class PromiseLock {
         const lockPromise = new Promise((resolve) => {
             lockResolve = resolve
         })
-        const id = this._getLockId(lockPromise)
+        const lockId = this._getLockId()
+        if (this._currentLockId) {
+            this._queueResolve[lockId] = {
+                lockPromise,
+                lockResolve
+            }
+            await lockPromise
+        } else {
+            this._currentLockId = lockId
+        }
+        return lockId
     }
 
     /**
@@ -21,24 +31,27 @@ class PromiseLock {
      * @param {Number} id 锁ID
      */
     async realseLock(id) {
-
+        if (id !== this._currentLockId) {
+            throw new Error('promised-lock: lockId not matched')
+        }
+        const lockArray = Object.keys(this._queueResolve)
+        if (lockArray.length > 0) {
+            const lockId = lockArray[0]
+            this._currentLockId = Number(lockId)
+            this._queueResolve[lockId].lockResolve()
+            delete this._queueResolve[lockId]
+        } else {
+            this._currentLockId = null
+        }
     }
-
-    _waitForLock() {
-        // 等待this._lockPromise 全部完成
-    }
-
     /**
-     * 获得一个可用的锁编号
-     * @param {Promise} P 对应的Promise实例
+     * 获取新的lockId
      */
-    _getLockId(P) {
-        const currentID = this._lockId
+    _getLockId() {
+        const lockId = this._lockId
         this._lockId += 1
-        this._lockPromise[currentID] = P
-        return currentID
+        return lockId
     }
-
 }
 
 module.exports = PromiseLock
