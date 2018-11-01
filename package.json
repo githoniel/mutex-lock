@@ -1,5 +1,5 @@
 {
-  "name": "promised-lock",
+  "name": "mutex-lock",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

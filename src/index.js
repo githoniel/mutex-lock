@@ -15,10 +15,7 @@ class PromiseLock {
         })
         const lockId = this._getLockId()
         if (this._currentLockId) {
-            this._queueResolve[lockId] = {
-                lockPromise,
-                lockResolve
-            }
+            this._queueResolve[lockId] = lockResolve
             await lockPromise
         } else {
             this._currentLockId = lockId
@@ -38,7 +35,7 @@ class PromiseLock {
         if (lockArray.length > 0) {
             const lockId = lockArray[0]
             this._currentLockId = Number(lockId)
-            this._queueResolve[lockId].lockResolve()
+            this._queueResolve[lockId]()
             delete this._queueResolve[lockId]
         } else {
             this._currentLockId = null

@@ -1,4 +1,4 @@
-# Promised-Lock
+# mutex lock
 
 Promise化互斥锁， 申请锁后，只有锁释放才能使得下次申请锁能够Resolve
 
@@ -22,9 +22,9 @@ release lockid, let running `requestLock` to resolve
 ## Example
 
 ```js
-const PromiseLock = require('promised-lock')
+const MutexLock = require('mutex-lock')
 
-const lock = new PromiseLock()
+const lock = new MutexLock()
 
 const id = await lock.requestLock()
 lock.release(id)
