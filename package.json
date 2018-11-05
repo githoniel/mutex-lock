@@ -2,7 +2,7 @@
   "name": "mutex-lock",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "lint": "jest",
     "lint-staged": "lint-staged"
