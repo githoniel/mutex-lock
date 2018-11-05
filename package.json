@@ -1,13 +1,15 @@
 {
   "name": "mutex-lock",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "src/index.js",
   "scripts": {
     "lint": "jest",
     "lint-staged": "lint-staged"
   },
-  "pre-commit": ["lint"],
+  "pre-commit": [
+    "lint"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
