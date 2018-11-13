@@ -27,7 +27,7 @@ class PromiseLock {
      * 释放指定ID的锁
      * @param {Number} id 锁ID
      */
-    async realseLock(id) {
+    realseLock(id) {
         if (id !== this._currentLockId) {
             throw new Error('promised-lock: lockId not matched')
         }

@@ -3,6 +3,11 @@
 Promise化互斥锁， 申请锁后，只有锁释放才能使得下次申请锁能够Resolve
 
 Promise mutex lock, after `requestLock`, other `requestLock` will block until other lock are released.
+## Install
+
+```
+npm i mutex-lock --save
+```
 
 ## API
 
