@@ -8,7 +8,7 @@ class PromiseLock {
     /**
      * 申请锁，并且在当前锁全部执行完成的情况下，返回锁ID
      */
-    async requestLock() {
+    async request() {
         let lockResolve
         const lockPromise = new Promise((resolve) => {
             lockResolve = resolve
@@ -27,8 +27,8 @@ class PromiseLock {
      * 释放指定ID的锁
      * @param {Number} id 锁ID
      */
-    realseLock(id) {
-        if (id !== this._currentLockId) {
+    release(id) {
+        if (id !== undefined && id !== this._currentLockId) {
             throw new Error('promised-lock: lockId not matched')
         }
         const lockArray = Object.keys(this._queueResolve)

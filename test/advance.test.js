@@ -9,12 +9,12 @@ function sleep(ms = 0) {
 it('lock-lock-realse should work', async (done) => {
     const lock = new PromiseLock()
     const mockFn = jest.fn(() => {})
-    const lockId1 = await lock.requestLock()
-    lock.requestLock().then(mockFn)
+    const lockId1 = await lock.request()
+    lock.request().then(mockFn)
     // start match
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(0))
-    lock.realseLock(lockId1)
+    lock.release(lockId1)
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(1))
     done()
@@ -23,13 +23,13 @@ it('lock-lock-realse should work', async (done) => {
 it('lock-lock-lock-realse should work', async (done) => {
     const lock = new PromiseLock()
     const mockFn = jest.fn(() => {})
-    const lockId1 = await lock.requestLock()
-    lock.requestLock().then(mockFn)
-    lock.requestLock().then(mockFn)
+    const lockId1 = await lock.request()
+    lock.request().then(mockFn)
+    lock.request().then(mockFn)
     // start match
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(0))
-    lock.realseLock(lockId1)
+    lock.release(lockId1)
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(1))
     done()
@@ -38,20 +38,20 @@ it('lock-lock-lock-realse should work', async (done) => {
 it('lock-lock-lock-realse-realse should work', async (done) => {
     const lock = new PromiseLock()
     const mockFn = jest.fn(() => {})
-    const lockId1 = await lock.requestLock()
+    const lockId1 = await lock.request()
     let lockId2
-    lock.requestLock().then((id2) => {
+    lock.request().then((id2) => {
         lockId2 = id2
         mockFn()
     })
-    lock.requestLock().then(mockFn)
+    lock.request().then(mockFn)
     // start match
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(0))
-    lock.realseLock(lockId1)
+    lock.release(lockId1)
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(1))
-    lock.realseLock(lockId2)
+    lock.release(lockId2)
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(2))
     done()
@@ -60,28 +60,28 @@ it('lock-lock-lock-realse-realse should work', async (done) => {
 it('lock-lock-lock-realse-realse-realse-lock should work', async (done) => {
     const lock = new PromiseLock()
     const mockFn = jest.fn(() => {})
-    const lockId1 = await lock.requestLock()
+    const lockId1 = await lock.request()
     let lockId2
-    lock.requestLock().then((id2) => {
+    lock.request().then((id2) => {
         lockId2 = id2
         mockFn()
     })
     let lockId3
-    lock.requestLock().then((id3) => {
+    lock.request().then((id3) => {
         lockId3 = id3
         mockFn()
     })
-    lock.requestLock().then(mockFn)
+    lock.request().then(mockFn)
     // start match
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(0))
-    lock.realseLock(lockId1)
+    lock.release(lockId1)
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(1))
-    lock.realseLock(lockId2)
+    lock.release(lockId2)
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(2))
-    lock.realseLock(lockId3)
+    lock.release(lockId3)
     await sleep()
     expect(expect(mockFn.mock.calls.length).toBe(3))
     await sleep()

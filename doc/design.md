@@ -18,7 +18,7 @@ Promise化 互斥锁通用类
 
 ## Code
 
-requestLock() --> LockPromise = new Promise --> Object.keys(_queueResolve).length > 1 ---> await LockPromise ---> return id
+request() --> LockPromise = new Promise --> Object.keys(_queueResolve).length > 1 ---> await LockPromise ---> return id
                 LockResolve = resolve                       |
                 _queueResolve[id] = lockInfo                |
                                                             --> return id

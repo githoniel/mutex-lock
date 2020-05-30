@@ -2,18 +2,18 @@ const PromiseLock = require('../src')
 
 it('single call should run well', async (done) => {
     const lock = new PromiseLock()
-    const lockId = await lock.requestLock()
-    await lock.realseLock(lockId)
+    const lockId = await lock.request()
+    await lock.release(lockId)
     done()
 })
 
 it('call in seq should run well', async (done) => {
     const lock = new PromiseLock()
     for (let i = 0; i < 10; i++) {
-        const lockId = await lock.requestLock()
-        await lock.realseLock(lockId)
-        const lockId2 = await lock.requestLock()
-        await lock.realseLock(lockId2)
+        const lockId = await lock.request()
+        await lock.release(lockId)
+        await lock.request()
+        await lock.release()
     }
     done()
 })
@@ -21,8 +21,8 @@ it('call in seq should run well', async (done) => {
 it('conflict lock should block', async (done) => {
     const lock = new PromiseLock()
     const mockFn = jest.fn(() => {})
-    await lock.requestLock()
-    lock.requestLock().then(mockFn)
+    await lock.request()
+    lock.request().then(mockFn)
     setTimeout(() => {
         expect(mockFn.mock.calls.length).toBe(0)
         done()
@@ -32,10 +32,10 @@ it('conflict lock should block', async (done) => {
 it('multi conflict lock should block', async (done) => {
     const lock = new PromiseLock()
     const mockFn = jest.fn(() => {})
-    await lock.requestLock()
-    lock.requestLock().then(mockFn)
-    lock.requestLock().then(mockFn)
-    lock.requestLock().then(mockFn)
+    await lock.request()
+    lock.request().then(mockFn)
+    lock.request().then(mockFn)
+    lock.request().then(mockFn)
     setTimeout(() => {
         expect(mockFn.mock.calls.length).toBe(0)
         done()
